@@ -8,16 +8,16 @@ my @reserved = qw(
 		);
 
 my $filename = shift;
-open my $fh, '>', $filename
+open my $fh, '<', $filename
   or die "Can't open file : $!\n";
-
 my @lines;
-
-while (my $lines = <$fh>) {
-  push(@lines, $lines);
-  $lines =~ s/.*//g;
+{
+    local $/;
+    @lines = <$fh>;
 }
+close($fh);
 
+open $fh, '>', $filename;
 foreach my $line (@lines) {
   foreach $_ (@reserved) {
     if ($line =~ qr/$_/) {
