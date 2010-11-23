@@ -2,20 +2,20 @@
 use warnings;
 use strict;
 
-my @reserved= (
-	       "insert", "values","into",
-	       "create", "table", "select"
+my @reserved= qw(
+	       insert values into
+	       create table select
  );
 
 my $filename = shift;
-open my $fh, '<', $filename;
+open my $fh, '<', $filename
+  or die "Can't open file : $!\n";
 
-if ( <$fh> ) {
-  foreach $_ ( @reserved ) {
-    if ( $fh =~ qr/$_/ ) {
-      $fh =~ s/($_)/\U$1\E/g;
-      print "$fh\n";
-    }
+while (my $line = <$fh>) {
+  foreach $_ (@reserved) {
+    if ($line =~ qr/$_/) {
+      $line=~ s/\b($_)\b/\U$1\E/g;
+    } else { next; }
   }
+  print "$line";
 }
-else { print "Can't open file \n" ;}

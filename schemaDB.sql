@@ -1,25 +1,41 @@
-CREATE TABLE article (
-	artID INTEGER PRIMARY KEY AUTOINCREMENT,
-	url TEXT NOT NULL,
-	title TEXT
-);
-CREATE TABLE tag (
-       tagID INTEGER PRIMARY KEY AUTOINCREMENT,
-       tag TEXT NOT NULL
-);
-CREATE TABLE tagLinks (
-       artID INTEGER NOT NULL REFERENCES article(artID),
-       tagID INTEGER NOT NULL REFERENCES tag(tagID),
-       PRIMARY KEY (artID,tagID)
-);
+#!/usr/bin/env perl
+use warnings;
+use strict;
 
--- Useless now ; created while parsing pearltrees.rdf
+my @reserved= qw(
+	       insert values into
+	       create table select
+ );
 
--- CREATE VIRTUAL TABLE webpage USING FTS3 (
---        pgcontent TEXT,
---        artID INTEGER NOT NULL REFERENCES article(artID)
--- );
+my $filename = shift;
+open my $fh, '<', $filename
+  or die "Can't open file : $!\n";
 
-insert values zczvev into table dezdq;
+# open my $out, '>', $filename
+#   or die "Can't open output file : $!\n";
 
-.exit
+my $i=0;
+
+# while (<$fh>) {
+#   foreach my $reserved (@reserved) {
+#     if ($fh =~ qr/$reserved/) {
+#       $fh =~ s/($reserved)/\U$1\E/;
+#       $i++;
+#       next;
+#     }
+#     else {next;}
+#   }
+#}
+
+while (my $line = <$fh>) {
+  foreach $_ (@reserved) {
+    if ($line =~ qr/$_/) {
+      $i++;
+      $line=~ s/($_)/\U$1\E/g;
+      print "$line $/";
+    } else { print "$line $/"; }
+  }
+}
+# print "$i $/";
+# print "All done !\n";
+
